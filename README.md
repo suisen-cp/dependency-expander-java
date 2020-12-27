@@ -1,4 +1,4 @@
-# dependency_expander
+# dependency-expander-java
 
 ライブラリや標準ライブラリへの依存関係を解決し, 単一ファイルで実行可能となるようにソースコードを展開する競技プログラミング向けのツールです.
 

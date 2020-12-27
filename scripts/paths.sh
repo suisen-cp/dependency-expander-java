@@ -8,6 +8,6 @@ OUT_DIR="${EXPANDER_DIR}/out"
 SRC_DIR="${EXPANDER_DIR}/src"
 
 # --------------- edit here ------------------ #
-CLASS_PATH="out/production/cp-library-java"     
-SOURCE_PATH="src"                               
+CLASS_PATH="out/classes/"
+SOURCE_PATH="src"
 # --------------- edit here ------------------ #
