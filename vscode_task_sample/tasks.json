@@ -1,0 +1,42 @@
+
+{
+    "version": "2.0.0",
+
+    "tasks": [
+        {
+            "label": "expand current file",
+            "type": "shell",
+            "command": "dependency_expander/scripts/expander.sh",
+            "args": [
+                "${file}"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                // "reveal": "silent",
+                "showReuseMessage": false,
+                "clear": true
+            }
+        },
+        {
+            "label": "update library: compile libraries and build dependency-digraph",
+            "type": "shell",
+            "command": "(dependency_expander/scripts/compile_library.sh; dependency_expander/scripts/build_dependency_graph.sh)",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "echo": false,
+                "reveal": "silent",
+                "showReuseMessage": false,
+                "clear": true
+            }
+        }
+    ]
+}
