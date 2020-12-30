@@ -23,3 +23,6 @@ function catch() {
     echo_colored "Failed." $RED
 }
 trap catch ERR
+
+source_paths_array=(${source_paths//:/ })
+class_paths_array=(${class_paths//:/ })

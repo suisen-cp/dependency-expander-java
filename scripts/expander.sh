@@ -31,15 +31,15 @@ src_class_name=$(basename "${SRC_FILE}" | sed -e 's/\.java$//')
 dst_class_name=$(basename "${DST_FILE}" | sed -e 's/\.java$//')
 
 echo -n "compiling the source file..."
-javac -d "${TMP_DIR}" -cp "${CLASS_PATH}" "${SRC_FILE}"
+javac -d "${TMP_DIR}" -cp "${class_paths}" "${SRC_FILE}"
 echo_ok
 
 echo -n "getting direct dependencies..."
-jdeps -v -cp "${CLASS_PATH}" "${TMP_DIR}" | sed '/^[^ ]/d' | sed -E 's/\$[^ ]+ //g' > "${ALL_TMP_OUT}"
+jdeps -v -cp "${class_paths}" "${TMP_DIR}" | sed '/^[^ ]/d' | sed -E 's/\$[^ ]+ //g' > "${ALL_TMP_OUT}"
 echo_ok
 
 echo -n "extracting direct lib dependencies..."
-lib_deps=$({ grep -v "java\.base" "${ALL_TMP_OUT}" || true; } | sed -E 's/[^ ]+$//' | sed -e 's/ *//g' -e '/^\(.*\)->\1$/d' -e 's/^.*->//' | sort | uniq)
+lib_deps=$({ grep -v "java\.base" "${ALL_TMP_OUT}" || true; } | sed -E 's/(not found)|([^ ]+)$//' | sed -e 's/ *//g' -e '/^\(.*\)->\1$/d' -e 's/^.*->//' | sort | uniq)
 echo_ok
 echo_colored "${lib_deps}" $BLUE
 
@@ -81,12 +81,15 @@ echo_ok
 
 echo "expanding libraries..."
 cat ${LIB_TMP_OUT} | sed 's;\.;/;g' | while read -r line ; do
-    if [ -n "${line}" ]; then
-        echo -n "path: "
-        echo -en "\033[0;${BLUE}m${SOURCE_PATH}/${line}\033[0;39m..."
-        cat "${SOURCE_PATH}/${line}.java" | sed -e '/^package/d' -e '/^import/d' -e 's/^public //' >> "${DST_FILE}"
-        echo_ok
-    fi
+    for source_path in ${source_paths_array[@]}; do
+        if [ -f "${source_path}/${line}.java" ]; then
+            echo -n "path: "
+            echo -en "\033[0;${BLUE}m${source_path}/${line}\033[0;39m..."
+            cat "${source_path}/${line}.java" | sed -e '/^package/d' -e '/^import/d' -e 's/^public //' >> "${DST_FILE}"
+            echo_ok
+            break
+        fi
+    done
 done
 
 echo -n "cleaning..."

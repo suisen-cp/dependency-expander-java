@@ -8,6 +8,5 @@ OUT_DIR="${EXPANDER_DIR}/out"
 SRC_DIR="${EXPANDER_DIR}/src"
 
 # --------------- edit here ------------------ #
-CLASS_PATH="out/classes/"
-SOURCE_PATH="src"
-# --------------- edit here ------------------ #
+source_paths="test/lib1/src:test/lib2/src:test/lib3/src"
+class_paths="test/lib1/classes:test/lib2/classes:test/lib3/classes"

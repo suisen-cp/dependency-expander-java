@@ -4,8 +4,8 @@ import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.TreeSet;
+import java.util.HashSet;
 
 public class Expander {
     static final HashSet<String> EMPTY_MAP = new HashSet<>(0);
@@ -23,6 +23,7 @@ public class Expander {
         ObjectInputStream inStd = new ObjectInputStream(new FileInputStream(new File(args[ARG_STD_OBJ_PATH])));
         HashMap<String, HashSet<String>> depMapLib = (HashMap<String, HashSet<String>>) inLib.readObject();
         HashMap<String, HashSet<String>> depMapStd = (HashMap<String, HashSet<String>>) inStd.readObject();
+
         TreeSet<String> depsLib = new TreeSet<>();
         TreeSet<String> depsStd = new TreeSet<>();
         Arrays.stream(args[ARG_LIB_DEPS].split("\n"))

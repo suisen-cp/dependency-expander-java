@@ -1,8 +1,8 @@
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Scanner;
@@ -59,8 +59,24 @@ class LibExpander {
                 }
             });
         });
+
         File libOut = new File(libDepPath + ".object");
         File stdOut = new File(stdDepPath + ".object");
+        ObjectInputStream inLib = new ObjectInputStream(new FileInputStream(libOut));
+        ObjectInputStream inStd = new ObjectInputStream(new FileInputStream(stdOut));
+        HashMap<String, HashSet<String>> depMapLib;
+        HashMap<String, HashSet<String>> depMapStd;
+        try {
+            depMapLib = (HashMap<String, HashSet<String>>) inLib.readObject();
+            depMapStd = (HashMap<String, HashSet<String>>) inStd.readObject();
+        } catch (Exception e) {
+            depMapLib = new HashMap<>();
+            depMapStd = new HashMap<>();
+        }
+        libDeps.putAll(depMapLib);
+        stdDeps.putAll(depMapStd);
+        inLib.close();
+        inStd.close();
         ObjectOutputStream libOs = new ObjectOutputStream(new FileOutputStream(libOut));
         ObjectOutputStream stdOs = new ObjectOutputStream(new FileOutputStream(stdOut));
         libOs.writeObject(libDeps);
@@ -70,31 +86,31 @@ class LibExpander {
         stdOs.flush();
         stdOs.close();
 
-        PrintWriter libPw = new PrintWriter(new File(libDepPath + ".object.json"));
-        PrintWriter stdPw = new PrintWriter(new File(stdDepPath + ".object.json"));
-        libPw.println(jsonify(libDeps));
-        stdPw.println(jsonify(stdDeps));
-        libPw.flush();
-        libPw.close();
-        stdPw.flush();
-        stdPw.close();
+        // PrintWriter libPw = new PrintWriter(new FileWriter(libDepPath + ".object.json", true));
+        // PrintWriter stdPw = new PrintWriter(new FileWriter(stdDepPath + ".object.json", true));
+        // libPw.println(jsonify(libDeps));
+        // stdPw.println(jsonify(stdDeps));
+        // libPw.flush();
+        // libPw.close();
+        // stdPw.flush();
+        // stdPw.close();
     }
 
-    static final String INDENT = "    ";
+    // static final String INDENT = "    ";
 
-    static String jsonify(HashMap<String, HashSet<String>> map) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{\n");
-        map.forEach((key, set) -> {
-            sb.append(INDENT).append(String.format("\"%s\" : [\n", key));
-            set.forEach(v -> {
-                sb.append(INDENT).append(INDENT).append(String.format("\"%s\",\n", v));
-            });
-            sb.deleteCharAt(sb.length() - 2);
-            sb.append(INDENT).append("],\n");
-        });
-        sb.deleteCharAt(sb.length() - 2);
-        sb.append("}\n");
-        return sb.toString();
-    }
+    // static String jsonify(HashMap<String, HashSet<String>> map) {
+    //     StringBuilder sb = new StringBuilder();
+    //     sb.append("{\n");
+    //     map.forEach((key, set) -> {
+    //         sb.append(INDENT).append(String.format("\"%s\" : [\n", key));
+    //         set.forEach(v -> {
+    //             sb.append(INDENT).append(INDENT).append(String.format("\"%s\",\n", v));
+    //         });
+    //         sb.deleteCharAt(sb.length() - 2);
+    //         sb.append(INDENT).append("],\n");
+    //     });
+    //     sb.deleteCharAt(sb.length() - 2);
+    //     sb.append("}\n");
+    //     return sb.toString();
+    // }
 }
