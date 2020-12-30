@@ -39,7 +39,7 @@ jdeps -v -cp "${CLASS_PATH}" "${TMP_DIR}" | sed '/^[^ ]/d' | sed -E 's/\$[^ ]+ /
 echo_ok
 
 echo -n "extracting direct lib dependencies..."
-lib_deps=$(grep -v "java\.base" "${ALL_TMP_OUT}" | sed -E 's/[^ ]+$//' | sed -e 's/ *//g' -e '/^\(.*\)->\1$/d' -e 's/^.*->//' | sort | uniq)
+lib_deps=$({ grep -v "java\.base" "${ALL_TMP_OUT}" || true; } | sed -E 's/[^ ]+$//' | sed -e 's/ *//g' -e '/^\(.*\)->\1$/d' -e 's/^.*->//' | sort | uniq)
 echo_ok
 echo_colored "${lib_deps}" $BLUE
 
