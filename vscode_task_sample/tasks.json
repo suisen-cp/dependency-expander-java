@@ -6,7 +6,7 @@
         {
             "label": "expand current file",
             "type": "shell",
-            "command": "dependency_expander/scripts/expander.sh",
+            "command": "dependency-expander-java/scripts/expander.sh",
             "args": [
                 "${file}"
             ],
@@ -27,7 +27,7 @@
         {
             "label": "update library: compile libraries and build dependency-digraph",
             "type": "shell",
-            "command": "(dependency_expander/scripts/compile_library.sh; dependency_expander/scripts/build_dependency_graph.sh)",
+            "command": "(dependency-expander-java/scripts/compile_library.sh; dependency-expander-java/scripts/build_dependency_graph.sh)",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
